@@ -50,15 +50,6 @@ jobs:
             vault secrets enable -path=testing-user3 -version=2 kv
 workflows:
   version: 2
-  build-and-deploy:
-    jobs:
-      - build:
-      
-  nightly-build:
-    triggers:
-      - schedule:
-          cron: "0 5 * * *"
-
     jobs:
       - build
       - policy:
