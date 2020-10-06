@@ -30,7 +30,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Vault Policy Testing
           command: |
             set -e
             sudo -E /usr/local/bin/vault login $ROOT_TOKEN
@@ -52,9 +51,9 @@ workflows:
     jobs:
       - build
       - policy:
-          requires:
-            - build
-          filters:
-            branches:
-              only:
-                - master
+        requires:
+          - build
+        filters:
+          branches:
+            only:
+              - master
