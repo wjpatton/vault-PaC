@@ -11,10 +11,10 @@ jobs:
       - run: sudo unzip /tmp/vault.zip
       - run: sudo cp vault /usr/local/bin/vault
       - run: sudo chmod +x /usr/local/bin/vault
-      - run: export VAULT_ADDR='http://127.0.0.1:8200'
+      - run: export 'VAULT_ADDR="http://127.0.0.1:8200"' >> $BASH_ENV
       - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev > /usr/local/bin/nohup.out &'
       - run: sleep 2
-      - run: export ROOT_TOKEN=$(grep 'Root Token:' /usr/local/bin/nohup.out | awk '{print $NF}')
+      - run: export 'ROOT_TOKEN=$(grep "Root Token:" /usr/local/bin/nohup.out | awk "{print $NF}")' >> $BASH_ENV
       - run: /usr/local/bin/vault login $ROOT_TOKEN
   policy:
     machine:
