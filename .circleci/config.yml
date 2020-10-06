@@ -54,4 +54,5 @@ workflows:
             branches:
               only: master
       - policy:
-          requires: build
+          requires: 
+            - build
