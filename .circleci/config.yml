@@ -24,6 +24,7 @@ jobs:
             export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
             vault login $ROOT_TOKEN
             sleep 2
+            exit 0
   policy:
     machine:
       image: ubuntu-1604:201903-01
@@ -47,3 +48,4 @@ jobs:
             curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             vault secrets enable -path=testing-user2 -version=1 kv
             vault secrets enable -path=testing-user3 -version=2 kv
+            exit 0
