@@ -9,7 +9,6 @@ jobs:
       - run:
           name: Setup Vault
           command: |
-            apt -y update
             apt -y install wget unzip
             wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
             cd /tmp
