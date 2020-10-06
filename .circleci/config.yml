@@ -43,11 +43,11 @@ workflows:
   build_and_test:
     jobs:
       - build
-        environment:
-          VAULT_ADDR: http://127.0.0.1:8200
+          environment:
+            VAULT_ADDR: http://127.0.0.1:8200
       - policy:
-        environment:
-          VAULT_ADDR: http://127.0.0.1:8200
+          environment:
+            VAULT_ADDR: http://127.0.0.1:8200
           requires:
             - build
           filters:
