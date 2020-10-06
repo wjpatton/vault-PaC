@@ -6,6 +6,7 @@ jobs:
       working_directory: /usr/local/bin/
     environment:
       VAULT_ADDR: http://127.0.0.1:8200
+      ROOT_TOKEN: root
     steps:
       - checkout
       - run: set -e
@@ -18,7 +19,7 @@ jobs:
             sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
             sleep 2
             cat /usr/local/bin/nohup.out
-            /usr/local/bin/vault login root
+            /usr/local/bin/vault login $ROOT_TOKEN
   policy:
     machine:
       image: ubuntu-1604:201903-01
@@ -31,16 +32,16 @@ jobs:
           name: Vault Policy Testing
           command: |
             set -e
-            /usr/local/bin/vault login root
+            /usr/local/bin/vault login $ROOT_TOKEN
             sleep 2
             /usr/local/bin/vault policy write user-policy user-policy.hcl
             sudo sh -c '/usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out'
-            export USER_TOKEN=$(grep -m 1 'token' /usr/local/bin/user.out | awk '{print $NF}') >> $BASH_ENV
+            echo 'export USER_TOKEN=$(grep -m 1 "token" /usr/local/bin/user.out | awk "{print $NF}")' >> $BASH_ENV
             source $BASH_ENV
-            curl --header "X-Vault-Token: root" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault login $USER_TOKEN
             /usr/local/bin/vault secrets enable -path=testing-user -version=1 kv
-            curl --header "X-Vault-Token: root" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault secrets enable -path=testing-user2 -version=1 kv
             /usr/local/bin/vault secrets enable -path=testing-user3 -version=2 kv
             exit 0
