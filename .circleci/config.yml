@@ -49,11 +49,11 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      build
-      policy:
-        requires:
-          - build
-        filters:
-          branches:
-            only:
-              - master
+      - build
+      - policy:
+          - requires:
+            - build
+          - filters:
+              branches:
+                only:
+                  - master
