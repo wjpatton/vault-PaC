@@ -13,10 +13,12 @@ jobs:
       - run: sudo unzip /tmp/vault.zip
       - run: sudo cp vault /usr/local/bin/vault
       - run: sudo chmod +x /usr/local/bin/vault
-      - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
-      - run: sleep 2
-      - run: cat /usr/local/bin/nohup.out
-      - run: /usr/local/bin/vault login root
+      - run:
+          command: |
+          sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
+          sleep 2
+          cat /usr/local/bin/nohup.out
+          /usr/local/bin/vault login root
   policy:
     machine:
       image: ubuntu-1604:201903-01
