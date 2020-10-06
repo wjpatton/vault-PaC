@@ -26,6 +26,7 @@ jobs:
       working_directory: /usr/local/bin/
     environment:
       VAULT_ADDR: http://127.0.0.1:8200
+      ROOT_TOKEN: root
     steps:
       - checkout
       - run:
@@ -49,7 +50,10 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: master
       - policy:
           requires:
             - build
