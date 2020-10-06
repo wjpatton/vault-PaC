@@ -52,8 +52,8 @@ workflows:
     jobs:
       - build
       - policy:
-          requires:
-            - build
-          filters:
-            branches:
-              only: master
+        requires:
+          - build
+        filters:
+          branches:
+            only: master
