@@ -9,6 +9,7 @@ jobs:
       - run:
           name: Setup Vault
           command: |
+            set -e
             sudo su -
             wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
             cd /tmp
@@ -34,6 +35,7 @@ jobs:
       - run:
           name: Vault Policy Testing
           command: |
+            set -e
             cd /usr/local/bin
             export VAULT_ADDR='http://127.0.0.1:8200'
             export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
