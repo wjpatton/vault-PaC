@@ -16,6 +16,8 @@ jobs:
       - run: sudo chmod +x /usr/local/bin/vault
       - run:
           command: |
+            sudo sh -c echo 'export VAULT_ADDR=http://127.0.0.1:8200' >> $BASH_ENV
+            sudo -s source $BASH_ENV
             sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
             sleep 2
             cat /usr/local/bin/nohup.out
