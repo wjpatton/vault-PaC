@@ -12,10 +12,9 @@ jobs:
       - run: sudo cp vault /usr/local/bin/vault
       - run: sudo chmod +x /usr/local/bin/vault
       - run: export 'VAULT_ADDR="http://127.0.0.1:8200"' >> $BASH_ENV
-      - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev > /usr/local/bin/nohup.out &'
+      - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
       - run: sleep 2
-      - run: export 'ROOT_TOKEN=$(grep "Root Token:" /usr/local/bin/nohup.out | awk "{print $NF}")' >> $BASH_ENV
-      - run: sudo /usr/local/bin/vault login
+      - run: sudo /usr/local/bin/vault login root
   policy:
     machine:
       image: ubuntu-1604:201903-01
@@ -27,17 +26,15 @@ jobs:
           command: |
             set -e
             export 'VAULT_ADDR="http://127.0.0.1:8200"' >> $BASH_ENV
-            export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
-            sudo /usr/local/bin/vault login
+            /usr/local/bin/vault login root
             sleep 2
             /usr/local/bin/vault policy write user-policy user-policy.hcl
-            sudo touch /usr/local/bin/user.out
             sudo sh -c '/usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out'
             export USER_TOKEN=$(grep -m 1 'token' /usr/local/bin/user.out | awk '{print $NF}')
-            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            curl --header "X-Vault-Token: root" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault login $USER_TOKEN
             /usr/local/bin/vault secrets enable -path=testing-user -version=1 kv
-            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            curl --header "X-Vault-Token: root" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault secrets enable -path=testing-user2 -version=1 kv
             /usr/local/bin/vault secrets enable -path=testing-user3 -version=2 kv
             exit 0
