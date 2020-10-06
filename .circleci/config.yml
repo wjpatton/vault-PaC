@@ -25,7 +25,7 @@ jobs:
             sleep 2
             sudo -E /usr/local/bin/vault policy write user-policy user-policy.hcl
             sudo -E sh -c '/usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out'
-      - run: echo 'export USER_TOKEN=$(grep -m 1 token /usr/local/bin/user.out | awk "{print $NF}")' >> $BASH_ENV
+      - run: echo USER_TOKEN=$(grep -m 1 -w 'token' /usr/local/bin/user.out | awk '{print $NF}') >> $BASH_ENV
       - run: source $BASH_ENV
       - run: 'curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount'
       - run: sudo -E /usr/local/bin/vault login $USER_TOKEN
