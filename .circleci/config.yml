@@ -15,10 +15,10 @@ jobs:
       - run: sudo chmod +x /usr/local/bin/vault
       - run:
           command: |
-          sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
-          sleep 2
-          cat /usr/local/bin/nohup.out
-          /usr/local/bin/vault login root
+            sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
+            sleep 2
+            cat /usr/local/bin/nohup.out
+            /usr/local/bin/vault login root
   policy:
     machine:
       image: ubuntu-1604:201903-01
