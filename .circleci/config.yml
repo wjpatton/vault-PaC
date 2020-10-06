@@ -26,7 +26,7 @@ jobs:
             vault login $ROOT_TOKEN
             sleep 2
             exit 0
-            circleci step halt
+            circleci-agent step halt
   policy:
     machine:
       image: ubuntu-1604:201903-01
