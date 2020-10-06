@@ -27,14 +27,12 @@ jobs:
             sudo -E sh -c '/usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out'
       - run: echo 'export USER_TOKEN=$(grep -m 1 token /usr/local/bin/user.out | awk "{print $NF}")' >> $BASH_ENV
       - run: source $BASH_ENV
-      - run:
-          command: |
-            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
-            sudo -E /usr/local/bin/vault login $USER_TOKEN
-            sudo -E /usr/local/bin/vault secrets enable -path=testing-user -version=1 kv
-            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
-            sudo -E /usr/local/bin/vault secrets enable -path=testing-user2 -version=1 kv
-            sudo -E /usr/local/bin/vault secrets enable -path=testing-user3 -version=2 kv
+      - run: 'curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount'
+      - run: sudo -E /usr/local/bin/vault login $USER_TOKEN
+      - run: sudo -E /usr/local/bin/vault secrets enable -path=testing-user -version=1 kv
+      - run: 'curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount'
+      - run: sudo -E /usr/local/bin/vault secrets enable -path=testing-user2 -version=1 kv
+      - run: sudo -E /usr/local/bin/vault secrets enable -path=testing-user3 -version=2 kv
 
 workflows:
   version: 2
