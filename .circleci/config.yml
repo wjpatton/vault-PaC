@@ -1,11 +1,13 @@
+version: 2
 jobs:
   build: # name of your job
     machine: # executor type
       image: ubuntu-1604:201903-01
       working_directory: /usr/local/bin/
       steps:
+        - checkout
         - run:
-            name: Install Vault
+            name: Test Vault
             command: |
               apt -y update
               apt -y install wget unzip
