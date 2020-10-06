@@ -34,6 +34,8 @@ jobs:
         - run:
           name: Vault Policy Testing
           command: |
+              cd /usr/local/bin
+              export VAULT_ADDR='http://127.0.0.1:8200'
               export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
               vault login $ROOT_TOKEN
               sleep 2
