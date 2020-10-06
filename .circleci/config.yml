@@ -4,6 +4,8 @@ jobs:
     machine: # executor type
       image: ubuntu-1604:201903-01
       working_directory: /usr/local/bin/
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
     steps:
       - checkout
       - run: set -e
@@ -18,6 +20,8 @@ jobs:
     machine:
       image: ubuntu-1604:201903-01
       working_directory: /usr/local/bin/
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
     steps:
       - checkout
       - run:
@@ -43,11 +47,7 @@ workflows:
   build_and_test:
     jobs:
       - build
-          environment:
-            VAULT_ADDR: http://127.0.0.1:8200
       - policy:
-          environment:
-            VAULT_ADDR: http://127.0.0.1:8200
           requires:
             - build
           filters:
