@@ -14,7 +14,7 @@ jobs:
       - run: export VAULT_ADDR='http://127.0.0.1:8200'
       - run: sudo nohup /usr/local/bin/vault server -dev &
       - run: sleep 2
-      - run: export ROOT_TOKEN=$(grep 'Root Token:' /usr/local/bin/nohup.out | awk '{print $NF}')
+      - run: export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
       - run: /usr/local/bin/vault login $ROOT_TOKEN
   policy:
     machine:
@@ -28,11 +28,12 @@ jobs:
             set -e
             cd /usr/local/bin
             export VAULT_ADDR='http://127.0.0.1:8200'
-            export ROOT_TOKEN=$(grep 'Root Token:' /usr/local/bin/nohup.out | awk '{print $NF}')
+            export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
             /usr/local/bin/vault login $ROOT_TOKEN
             sleep 2
             /usr/local/bin/vault policy write user-policy user-policy.hcl
-            /usr/local/bin/vault token create -policy=user-policy > user.out
+            sudo touch /usr/local/bin/user.out
+            /usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out
             export USER_TOKEN=$(grep -m 1 'token' /usr/local/bin/user.out | awk '{print $NF}')
             curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault login $USER_TOKEN
