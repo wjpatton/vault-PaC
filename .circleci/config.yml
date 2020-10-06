@@ -15,7 +15,7 @@ jobs:
       - run: sudo chmod +x /usr/local/bin/vault
       - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
       - run: sleep 2
-      - run: sudo /usr/local/bin/vault login root
+      - run: /usr/local/bin/vault login root
   policy:
     machine:
       image: ubuntu-1604:201903-01
