@@ -24,7 +24,7 @@ jobs:
             sleep 2
             export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
             vault login $ROOT_TOKEN
-            circleci-agent step halt
+      - run:  circleci-agent step halt
   policy:
     machine:
       image: ubuntu-1604:201903-01
