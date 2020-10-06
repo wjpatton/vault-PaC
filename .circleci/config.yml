@@ -2,11 +2,11 @@ version: 2
 jobs:
   build: # name of your job
     machine: # executor type
-      image: ubuntu-1604:201903-01
-      working_directory: /usr/local/bin/
+      - image: ubuntu-1604:201903-01
+      - working_directory: /usr/local/bin/
     environment:
-      VAULT_ADDR: http://127.0.0.1:8200
-      ROOT_TOKEN: root
+      - VAULT_ADDR: http://127.0.0.1:8200
+      - ROOT_TOKEN: root
     steps:
       - checkout
       - run: set -e
@@ -22,11 +22,11 @@ jobs:
             sudo -E /usr/local/bin/vault login $ROOT_TOKEN
   policy:
     machine:
-      image: ubuntu-1604:201903-01
-      working_directory: /usr/local/bin/
+      - image: ubuntu-1604:201903-01
+      - working_directory: /usr/local/bin/
     environment:
-      VAULT_ADDR: http://127.0.0.1:8200
-      ROOT_TOKEN: root
+      - VAULT_ADDR: http://127.0.0.1:8200
+      - ROOT_TOKEN: root
     steps:
       - checkout
       - run:
