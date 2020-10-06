@@ -53,19 +53,12 @@ workflows:
   build-and-deploy:
     jobs:
       - build:
-          filters:
-            branches:
-              only:
-                - master
       
   nightly-build:
     triggers:
       - schedule:
           cron: "0 5 * * *"
-          filters:
-            branches:
-              only:
-                - master
+
     jobs:
       - build
       - policy:
