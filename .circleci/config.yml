@@ -48,10 +48,3 @@ jobs:
             curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             vault secrets enable -path=testing-user2 -version=1 kv
             vault secrets enable -path=testing-user3 -version=2 kv
-workflows:
-  version: 2
-    jobs:
-      - build
-      - policy:
-          requires:
-            - build
