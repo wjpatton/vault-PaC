@@ -15,7 +15,7 @@ jobs:
       - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev > /usr/local/bin/nohup.out &'
       - run: sleep 2
       - run: export 'ROOT_TOKEN=$(grep "Root Token:" /usr/local/bin/nohup.out | awk "{print $NF}")' >> $BASH_ENV
-      - run: /usr/local/bin/vault login $ROOT_TOKEN
+      - run: /usr/local/bin/vault login
   policy:
     machine:
       image: ubuntu-1604:201903-01
