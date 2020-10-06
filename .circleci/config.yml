@@ -4,50 +4,50 @@ jobs:
     machine: # executor type
       image: ubuntu-1604:201903-01
       working_directory: /usr/local/bin/
-      steps:
-        - checkout
-        - run:
-            name: Setup Vault
-            command: |
-              apt -y update
-              apt -y install wget unzip
-              wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
-              cd /tmp
-              unzip vault.zip
-              cp vault /usr/local/bin/vault
-              chmod +x /usr/local/bin/vault
-              cd /usr/local/bin
-              export VAULT_ADDR='http://127.0.0.1:8200'
-              nohup vault server -dev &
-              sleep 2
-              cd /usr/local/bin
-              sleep 2
-              export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
-              vault login $ROOT_TOKEN
-              sleep 2
+    steps:
+      - checkout
+      - run:
+          name: Setup Vault
+          command: |
+            apt -y update
+            apt -y install wget unzip
+            wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
+            cd /tmp
+            unzip vault.zip
+            cp vault /usr/local/bin/vault
+            chmod +x /usr/local/bin/vault
+            cd /usr/local/bin
+            export VAULT_ADDR='http://127.0.0.1:8200'
+            nohup vault server -dev &
+            sleep 2
+            cd /usr/local/bin
+            sleep 2
+            export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
+            vault login $ROOT_TOKEN
+            sleep 2
   policy:
     machine:
       image: ubuntu-1604:201903-01
       working_directory: /usr/local/bin/
-      steps:
-        - checkout
-        - run:
-          name: Vault Policy Testing
-          command: |
-              cd /usr/local/bin
-              export VAULT_ADDR='http://127.0.0.1:8200'
-              export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
-              vault login $ROOT_TOKEN
-              sleep 2
-              vault policy write user-policy user-policy.hcl
-              vault token create -policy=user-policy > user.out
-              export USER_TOKEN=$(grep -m 1 'token' user.out | awk '{print $NF}')
-              curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
-              vault login $USER_TOKEN
-              vault secrets enable -path=testing-user -version=1 kv
-              curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
-              vault secrets enable -path=testing-user2 -version=1 kv
-              vault secrets enable -path=testing-user3 -version=2 kv
+    steps:
+      - checkout
+      - run:
+        name: Vault Policy Testing
+        command: |
+            cd /usr/local/bin
+            export VAULT_ADDR='http://127.0.0.1:8200'
+            export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
+            vault login $ROOT_TOKEN
+            sleep 2
+            vault policy write user-policy user-policy.hcl
+            vault token create -policy=user-policy > user.out
+            export USER_TOKEN=$(grep -m 1 'token' user.out | awk '{print $NF}')
+            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            vault login $USER_TOKEN
+            vault secrets enable -path=testing-user -version=1 kv
+            curl --header "X-Vault-Token: $ROOT_TOKEN" --request PUT --data @payload-bad.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
+            vault secrets enable -path=testing-user2 -version=1 kv
+            vault secrets enable -path=testing-user3 -version=2 kv
 workflows:
   version: 2
   build-and-deploy:
