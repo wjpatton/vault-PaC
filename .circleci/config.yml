@@ -7,19 +7,18 @@ jobs:
     steps:
       - checkout
       - run: set -e
-      - run: sudo su -
-      - run: wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
+      - run: sudo wget https://releases.hashicorp.com/vault/1.5.4+ent/vault_1.5.4+ent_linux_amd64.zip -O /tmp/vault.zip
       - run: cd /tmp
-      - run: unzip vault.zip
-      - run: cp vault /usr/local/bin/vault
-      - run: chmod +x /usr/local/bin/vault
+      - run: sudo unzip vault.zip
+      - run: sudo cp vault /usr/local/bin/vault
+      - run: sudo chmod +x /usr/local/bin/vault
       - run: cd /usr/local/bin
-      - run: export VAULT_ADDR='http://127.0.0.1:8200'
-      - run: nohup vault server -dev &
+      - run: sudo export VAULT_ADDR='http://127.0.0.1:8200'
+      - run: sudo nohup vault server -dev &
       - run: sleep 2
       - run: cd /usr/local/bin
       - run: sleep 2
-      - run: export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
+      - run: sudo export ROOT_TOKEN=$(grep 'Root Token:' nohup.out | awk '{print $NF}')
       - run: vault login $ROOT_TOKEN
   policy:
     machine:
