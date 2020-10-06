@@ -11,7 +11,6 @@ jobs:
       - run: sudo unzip /tmp/vault.zip
       - run: sudo cp vault /usr/local/bin/vault
       - run: sudo chmod +x /usr/local/bin/vault
-      - run: export 'VAULT_ADDR="http://127.0.0.1:8200"' >> $BASH_ENV
       - run: sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
       - run: sleep 2
       - run: sudo /usr/local/bin/vault login root
@@ -25,12 +24,12 @@ jobs:
           name: Vault Policy Testing
           command: |
             set -e
-            export 'VAULT_ADDR="http://127.0.0.1:8200"' >> $BASH_ENV
             /usr/local/bin/vault login root
             sleep 2
             /usr/local/bin/vault policy write user-policy user-policy.hcl
             sudo sh -c '/usr/local/bin/vault token create -policy=user-policy > /usr/local/bin/user.out'
-            export USER_TOKEN=$(grep -m 1 'token' /usr/local/bin/user.out | awk '{print $NF}')
+            export USER_TOKEN=$(grep -m 1 'token' /usr/local/bin/user.out | awk '{print $NF}') >> $BASH_ENV
+            source $BASH_ENV
             curl --header "X-Vault-Token: root" --request PUT --data @payload.json $VAULT_ADDR/v1/sys/policies/egp/deny-kv-v1-mount
             /usr/local/bin/vault login $USER_TOKEN
             /usr/local/bin/vault secrets enable -path=testing-user -version=1 kv
@@ -44,7 +43,11 @@ workflows:
   build_and_test:
     jobs:
       - build
+        environment:
+          VAULT_ADDR: http://127.0.0.1:8200
       - policy:
+        environment:
+          VAULT_ADDR: http://127.0.0.1:8200
           requires:
             - build
           filters:
