@@ -50,10 +50,12 @@ workflows:
   version: 2
   build_and_test:
     jobs:
-      - build
+      - build:
+          filters:
+            branches:
+              only: 
+                - master
       - policy:
-        requires:
-          - build
-        filters:
-          branches:
-            only: master
+          requires:
+            - build
+
