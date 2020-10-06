@@ -50,7 +50,7 @@ workflows:
   version: 2
   build-and-deploy:
     jobs:
-      - validate:
+      - build:
           filters:
             branches:
               only:
@@ -65,7 +65,7 @@ workflows:
               only:
                 - master
     jobs:
-      - validate
+      - build
       - policy:
           requires:
-            - validate
+            - build
