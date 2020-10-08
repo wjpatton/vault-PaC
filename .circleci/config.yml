@@ -18,7 +18,6 @@ jobs:
           command: |
             sudo sh -c 'nohup /usr/local/bin/vault server -dev -dev-root-token-id="root" > /usr/local/bin/nohup.out &'
             sleep 2
-            cat /usr/local/bin/nohup.out
             sudo -E /usr/local/bin/vault login $ROOT_TOKEN
       - run:
           command: |
