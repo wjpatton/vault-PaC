@@ -13,7 +13,7 @@ prevent_kv_v1_engines = func() {
      request.operation in ["create", "update"] {
     print("type of secrets engine:", request.data.type)
     if (request.data.options else null is null) or
-       ("version" in keys(request.data.options) and request.data.options.version is "1") {
+       ("version" in keys(request.data.options) and request.data.options.version is "2") {
       print("The version of the KV secrets engine is 1 which is not allowed.")
       print("Please set version to 2 or create engine with type kv-v2")
       return false
