@@ -1,7 +1,4 @@
-# vault-PaC
-Vault Policy as Code with CircleCI Demo for Vault Policy as Code
-
-#  Vault Sentinel policy
+#  Vault Sentinel policy as Code
 This demo uses the EGP endpoint for Sentinel policies as code.  CircleCI is used to deploy Vault and validate that the policy works as expected.
 
 ## Enterprise only
