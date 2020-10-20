@@ -16,6 +16,7 @@ File | Description | Application
 deny-kv-v1-mount-bad.sentinel | Plaintext Sentinel policy that prevents use of the KV v2 Secrets Engine, expected behavior was to prohibit v1. | Needs to be converted to base64 prior to be added to *payload-bad.json*
 deny-kv-v1-mount.sentinel | Plaintext Sentinel policy that prevents use of the KV v1 Secrets Engine. | Needs to be converted to base64 prior to be added to *payload.json*
 user-policy.hcl | User Policy to allow for CircleCI to test the KV engines.
+.circleci/config.yml | CircleCI build configuration | Used to define the build parameters for testing
 
 
 ### Base64
